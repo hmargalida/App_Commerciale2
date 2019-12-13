@@ -5,6 +5,7 @@
  */
 package fr.miage.tlse.jms;
 
+import fr.miage.tlse.export.CatalogueExport;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +14,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface SendCatalogueLocal {
-    public void sendCatalogue(String demande, String niveau);
+    public void sendCatalogue(CatalogueExport catalogue);
 }

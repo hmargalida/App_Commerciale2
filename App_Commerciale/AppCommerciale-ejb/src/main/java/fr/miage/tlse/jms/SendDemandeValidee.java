@@ -5,6 +5,8 @@
  */
 package fr.miage.tlse.jms;
 
+import com.google.gson.Gson;
+import fr.miage.tlse.export.DemandeExport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Resource;
@@ -15,10 +17,15 @@ import javax.jms.JMSContext;
 import javax.jms.JMSException;
 import javax.jms.JMSProducer;
 import javax.jms.ObjectMessage;
+import javax.jms.TextMessage;
 import javax.jms.Topic;
 
 /**
  *
+ * @author Sylvia
+ */
+/**
+ * Envoi des demandes à valider à l'application cliente
  * @author Sylvia
  */
 @Stateless
@@ -29,6 +36,8 @@ public class SendDemandeValidee implements SendDemandeValideeLocal {
      */
     @Resource(mappedName = "DemandeValidee")
     private Topic DemandeValidee;
+    
+    private Gson gson;
 
     /**
      * contexte JMS. Injection auto par serveur d'appli.
@@ -38,17 +47,17 @@ public class SendDemandeValidee implements SendDemandeValideeLocal {
     private JMSContext context;
 
     public SendDemandeValidee() {
-
+        gson=new Gson();
     }
 
     @Override
-    public void sendDemande(String demande, String niveau) {
+    public void sendDemande(DemandeExport demande, String niveau) {
         try {
             JMSProducer producer = context.createProducer();
 
-            ObjectMessage mess = context.createObjectMessage();
-            mess.setJMSType(niveau);
-            mess.setObject(demande);
+            TextMessage mess = context.createTextMessage();
+            mess.setJMSType(this.gson.toJson(demande));
+            mess.setJMSType("DemandeValidee");
             context.createProducer().send(DemandeValidee, mess);
             System.out.println(demande + " envoyée.");
 

@@ -14,12 +14,16 @@ public class Equipements {
      * L'énumération contenant les équipements d'une salle.
      */
     public enum Equipement{
-        VIDEOPROJECTEUR, TABLES, CHAISES, TABLEAU;
+        VIDEOPROJECTEUR("VideoProjecteur"), TABLES("Tables"), CHAISES("Chaises"), TABLEAU("Tableau");
         
         private String libelle;
         
         Equipement(){
             
+        }
+        
+        Equipement(String libelle){
+            this.libelle=libelle;
         }
 
         public String getLibelle() {

@@ -4,7 +4,10 @@
  * and open the template in the editor.
  */
 package fr.miage.tlse.jms;
+import com.google.gson.Gson;
 import fr.miage.tlse.business.GestionCommerciale;
+import fr.miage.tlse.exceptions.FormationNotFoundException;
+import fr.miage.tlse.export.DemandeExport;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.ActivationConfigProperty;
@@ -23,9 +26,19 @@ import javax.jms.TextMessage;
     ,
         @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
 })
+
+/**
+ * Reception des demandes à valider de la part de l'application Cliente
+ */
 public class ReceiveDemandesAValider implements MessageListener{
 
     private GestionCommerciale gestionCommerciale;
+    
+    private Gson gson;
+    
+    public ReceiveDemandesAValider(){
+        gson = new Gson();
+    }
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @Override
@@ -33,10 +46,13 @@ public class ReceiveDemandesAValider implements MessageListener{
         if (message instanceof TextMessage) {
             try {
                 String json = ((TextMessage) message).getText();
-                String msg = json;
-                ObjectMessage objet = (ObjectMessage) message;
-                this.gestionCommerciale.verifierFormation(0);
-
+                DemandeExport demande = this.gson.fromJson(json, DemandeExport.class);
+                try {
+                    this.gestionCommerciale.verifierFormation(demande.getIdDemande());
+                    System.out.println("La demande vient d'être récupérée.");
+                } catch (FormationNotFoundException ex) {
+                    Logger.getLogger(ReceiveDemandesAValider.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (JMSException ex) {
                 Logger.getLogger(ReceiveDemandesAValider.class.getName()).log(Level.SEVERE, null, ex);
             }

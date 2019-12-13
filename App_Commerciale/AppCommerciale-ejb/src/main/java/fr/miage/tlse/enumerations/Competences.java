@@ -14,12 +14,16 @@ public class Competences {
      * L'énumération contenant les compétences d'un formateur.
      */
     public enum Competence{
-        JAVA, BD;
+        JAVA("Java"), BD("BD");
         
         private String libelle;
         
         Competence(){
             
+        }
+        
+        Competence(String libelle){
+            this.libelle=libelle;
         }
 
         public String getLibelle() {

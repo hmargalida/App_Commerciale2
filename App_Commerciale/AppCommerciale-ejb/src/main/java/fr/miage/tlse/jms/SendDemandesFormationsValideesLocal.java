@@ -5,6 +5,7 @@
  */
 package fr.miage.tlse.jms;
 
+import fr.miage.tlse.export.DemandesFormationsValideesExport;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +14,5 @@ import javax.ejb.Local;
  */
 @Local
 public interface SendDemandesFormationsValideesLocal {
-    public void sendDemandesFormationsValidees(String demande, String niveau);
+    public void sendDemandesFormationsValidees(DemandesFormationsValideesExport demande, String niveau);
 }
